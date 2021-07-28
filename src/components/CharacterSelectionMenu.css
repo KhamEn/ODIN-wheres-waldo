@@ -1,0 +1,11 @@
+#menu {
+  position: absolute;
+  background-color: aquamarine;
+  list-style-type: none;
+  font-size: 20px;
+}
+
+#menu li:hover {
+  background-color: chartreuse;
+  cursor: pointer;
+}
