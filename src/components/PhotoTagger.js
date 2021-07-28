@@ -1,5 +1,4 @@
 import React, {useEffect, useRef} from 'react';
-import "./phototagger.css"
 import GAME_IMAGE from "../assets/me-characters.png";
 
 function PhotoTagger() {
@@ -17,7 +16,7 @@ function PhotoTagger() {
     }, []);
 
     return (
-        <canvas ref={canvas} id="canvas"/>
+        <canvas ref={canvas}/>
     );
 }
 
