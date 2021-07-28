@@ -11,6 +11,7 @@ import {
 function App() {
   const canvas = useRef(null);
   const cursorPosition = useRef({ x: 0, y: 0 });
+  const charactersFound = useRef(new Set());
   const characterSelectionMenu = useRef(null);
   const [menuIsOn, setMenusIsOn] = useState(false);
 
@@ -57,55 +58,64 @@ function App() {
     );
   }
 
-  function handleCharacterSelection(character) {
+  function handleCharacterSelection(characterName) {
+    const name = characterName.toLowerCase();
+
+    if (charactersFound.current.has(name)) {
+      return;
+    }
+
     const context = canvas.current.getContext("2d");
 
     // find characters
     if (
-      character === "Liara" &&
+      name === "liara" &&
       context.isPointInPath(
         liaraLocation,
         cursorPosition.current.x,
         cursorPosition.current.y
       )
     ) {
-      // placeCheckmark();
-      console.log("Found liara");
+      charactersFound.current.add("liara");
+      placeCheckmark();
     } else if (
-      character === "Garrus" &&
+      name === "garrus" &&
       context.isPointInPath(
         garrusLocation,
         cursorPosition.current.x,
         cursorPosition.current.y
       )
     ) {
-      // placeCheckmark();
-      console.log("Found garrus");
+      charactersFound.current.add("garrus");
+      placeCheckmark();
     } else if (
-      character === "Talia" &&
+      name === "talia" &&
       context.isPointInPath(
         taliaLocation,
         cursorPosition.current.x,
         cursorPosition.current.y
       )
     ) {
-      // placeCheckmark();
-      console.log("Found talia");
+      charactersFound.current.add("talia");
+      placeCheckmark();
     } else {
       // displayError();
       console.log("Found none");
     }
   }
 
-  // only if outside of canvas
-  function handleOnClick(e) {
-    // const rect = canvas.current.getBoundingClientRect();
-    // console.log(`clientX: ${e.clientX}, clientY: ${e.clientY}`);
-    // console.log(`rectX: ${rect.left}, rectY: ${rect.top}`);
+  function placeCheckmark() {
+    const appDiv = document.getElementById("App");
+    const checkmark = document.createElement("div");
+    checkmark.style.position = "absolute";
+    checkmark.style.left = `${cursorPosition.current.x}px`;
+    checkmark.style.top = `${cursorPosition.current.y}px`;
+    checkmark.textContent = "✅";
+    appDiv.appendChild(checkmark);
   }
 
   return (
-    <div className="App" onClick={toggleCharacterMenu}>
+    <div id="App" className="App" onClick={toggleCharacterMenu}>
       {menuIsOn && characterSelectionMenu.current}
       <canvas ref={canvas} onClick={toggleCharacterMenu} />
     </div>
