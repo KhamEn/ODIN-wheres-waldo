@@ -1,16 +1,24 @@
 import "./CharacterSelectionMenu.css";
 
-function CharacterSelectionMenu({ positionTop, positionLeft }) {
+function CharacterSelectionMenu({
+  positionTop,
+  positionLeft,
+  handleCharacterSelection,
+}) {
   const position = {
     top: `${positionTop}px`,
     left: `${positionLeft}px`,
   };
 
+  function handleOnClick(e) {
+    handleCharacterSelection(e.target.textContent);
+  }
+
   return (
     <ul style={position} id="menu">
-      <li>Liara</li>
-      <li>Talia</li>
-      <li>Garrus</li>
+      <li onClick={handleOnClick}>Liara</li>
+      <li onClick={handleOnClick}>Talia</li>
+      <li onClick={handleOnClick}>Garrus</li>
     </ul>
   );
 }
