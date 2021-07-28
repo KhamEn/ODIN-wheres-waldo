@@ -26,7 +26,14 @@ function App() {
   }, []);
 
   function toggleCharacterMenu(e) {
+    if (!cursorIsWithinCanvas(e)) {
+      if (menuIsOn) {
+        setMenusIsOn(false);
+      }
+      return;
+    }
     menuIsOn ? setMenusIsOn(false) : setMenusIsOn(true);
+
     // position the menu
     const rect = canvas.current.getBoundingClientRect();
     cursorPosition.current.x = e.clientX - rect.left;
@@ -37,6 +44,16 @@ function App() {
         positionTop={cursorPosition.current.y}
         handleCharacterSelection={handleCharacterSelection}
       />
+    );
+  }
+
+  function cursorIsWithinCanvas(e) {
+    const rect = canvas.current.getBoundingClientRect();
+    return (
+      e.clientX <= rect.right &&
+      e.clientX >= rect.left &&
+      e.clientY >= rect.top &&
+      e.clientY <= rect.bottom
     );
   }
 
@@ -80,10 +97,17 @@ function App() {
     }
   }
 
+  // only if outside of canvas
+  function handleOnClick(e) {
+    // const rect = canvas.current.getBoundingClientRect();
+    // console.log(`clientX: ${e.clientX}, clientY: ${e.clientY}`);
+    // console.log(`rectX: ${rect.left}, rectY: ${rect.top}`);
+  }
+
   return (
     <div className="App" onClick={toggleCharacterMenu}>
       {menuIsOn && characterSelectionMenu.current}
-      <canvas ref={canvas} />
+      <canvas ref={canvas} onClick={toggleCharacterMenu} />
     </div>
   );
 }
