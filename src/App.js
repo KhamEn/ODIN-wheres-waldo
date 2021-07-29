@@ -3,10 +3,9 @@ import CharacterSelectionMenu from "./components/CharacterSelectionMenu";
 import "./App.css";
 import GAME_IMAGE from "./assets/me-characters.png";
 import {
-  liara as liaraLocation,
-  garrus as garrusLocation,
-  talia as taliaLocation,
-} from "./assets/CharactersLocations";
+  getCharacterLocation,
+  initializeDatabase,
+} from "./assets/CharactersLocationsDB";
 import ErrorMessage from "./components/ErrorMessage";
 
 function App() {
@@ -27,6 +26,8 @@ function App() {
       context.drawImage(img, 0, 0);
     };
     img.src = GAME_IMAGE;
+
+    initializeDatabase();
   }, []);
 
   function toggleCharacterMenu(e) {
@@ -63,21 +64,24 @@ function App() {
 
   function handleCharacterSelection(characterName) {
     const name = characterName.toLowerCase();
-
     if (charactersFound.current.has(name)) {
       return;
     }
 
-    const context = canvas.current.getContext("2d");
-
     // find characters
-    if (name === "liara" && findCharacter(liaraLocation)) {
+    if (name === "liara" && findCharacter(getCharacterLocation("liara"))) {
       charactersFound.current.add("liara");
       placeCheckmark();
-    } else if (name === "garrus" && findCharacter(garrusLocation)) {
+    } else if (
+      name === "garrus" &&
+      findCharacter(getCharacterLocation("garrus"))
+    ) {
       charactersFound.current.add("garrus");
       placeCheckmark();
-    } else if (name === "talia" && findCharacter(taliaLocation)) {
+    } else if (
+      name === "talia" &&
+      findCharacter(getCharacterLocation("talia"))
+    ) {
       charactersFound.current.add("talia");
       placeCheckmark();
     } else {
