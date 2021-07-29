@@ -7,6 +7,7 @@ import {
   garrus as garrusLocation,
   talia as taliaLocation,
 } from "./assets/CharactersLocations";
+import ErrorMessage from "./components/ErrorMessage";
 
 function App() {
   const canvas = useRef(null);
@@ -14,6 +15,8 @@ function App() {
   const charactersFound = useRef(new Set());
   const characterSelectionMenu = useRef(null);
   const [menuIsOn, setMenusIsOn] = useState(false);
+  const [isIncorrectChoice, setIsIncorrectChoice] = useState(false);
+  const errorMessage = useRef(null);
 
   useEffect(() => {
     const context = canvas.current.getContext("2d");
@@ -68,40 +71,41 @@ function App() {
     const context = canvas.current.getContext("2d");
 
     // find characters
-    if (
-      name === "liara" &&
-      context.isPointInPath(
-        liaraLocation,
-        cursorPosition.current.x,
-        cursorPosition.current.y
-      )
-    ) {
+    if (name === "liara" && findCharacter(liaraLocation)) {
       charactersFound.current.add("liara");
       placeCheckmark();
-    } else if (
-      name === "garrus" &&
-      context.isPointInPath(
-        garrusLocation,
-        cursorPosition.current.x,
-        cursorPosition.current.y
-      )
-    ) {
+    } else if (name === "garrus" && findCharacter(garrusLocation)) {
       charactersFound.current.add("garrus");
       placeCheckmark();
-    } else if (
-      name === "talia" &&
-      context.isPointInPath(
-        taliaLocation,
-        cursorPosition.current.x,
-        cursorPosition.current.y
-      )
-    ) {
+    } else if (name === "talia" && findCharacter(taliaLocation)) {
       charactersFound.current.add("talia");
       placeCheckmark();
     } else {
-      // displayError();
-      console.log("Found none");
+      displayErrorMessage(characterName);
     }
+
+    function findCharacter(characterLocation) {
+      const context = canvas.current.getContext("2d");
+      return context.isPointInPath(
+        characterLocation,
+        cursorPosition.current.x,
+        cursorPosition.current.y
+      );
+    }
+  }
+
+  function displayErrorMessage(characterName) {
+    errorMessage.current = (
+      <ErrorMessage
+        positionX={cursorPosition.current.x}
+        positionY={cursorPosition.current.y}
+        characterName={characterName}
+      />
+    );
+    setIsIncorrectChoice(true);
+    setTimeout(() => {
+      setIsIncorrectChoice(false);
+    }, 2000);
   }
 
   function placeCheckmark() {
@@ -117,6 +121,7 @@ function App() {
   return (
     <div id="App" className="App" onClick={toggleCharacterMenu}>
       {menuIsOn && characterSelectionMenu.current}
+      {isIncorrectChoice && errorMessage.current}
       <canvas ref={canvas} onClick={toggleCharacterMenu} />
     </div>
   );
