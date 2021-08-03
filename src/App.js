@@ -1,23 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
 import CharacterSelectionMenu from "./components/CharacterSelectionMenu";
-import "./App.css";
+import ErrorMessage from "./components/ErrorMessage";
+import GameControl from "./components/GameControl";
+import GameStatus from "./assets/GameStatus";
 import GAME_IMAGE from "./assets/me-characters.png";
 import {
   getCharacterLocation,
   initializeDatabase,
 } from "./assets/CharactersLocationsDB";
-import ErrorMessage from "./components/ErrorMessage";
+
+import "./App.css";
 
 function App() {
+  const NUM_OF_CHARACTERS = 3;
   const canvas = useRef(null);
   const cursorPosition = useRef({ x: 0, y: 0 });
-  const charactersFound = useRef(new Set());
   const characterSelectionMenu = useRef(null);
-  const [menuIsOn, setMenusIsOn] = useState(false);
-  const [isIncorrectChoice, setIsIncorrectChoice] = useState(false);
+  const charactersFound = useRef(new Set());
   const errorMessage = useRef(null);
+  const [gameStatus, setGameStatus] = useState(GameStatus.INACTIVE);
+  const [menuIsVisible, setMenuIsVisible] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   useEffect(() => {
+    //  Display the game image
     const context = canvas.current.getContext("2d");
     const img = new Image();
     img.onload = function () {
@@ -32,12 +38,12 @@ function App() {
 
   function toggleCharacterMenu(e) {
     if (!cursorIsWithinCanvas(e)) {
-      if (menuIsOn) {
-        setMenusIsOn(false);
+      if (menuIsVisible) {
+        setMenuIsVisible(false);
       }
       return;
     }
-    menuIsOn ? setMenusIsOn(false) : setMenusIsOn(true);
+    menuIsVisible ? setMenuIsVisible(false) : setMenuIsVisible(true);
 
     // position the menu
     const rect = canvas.current.getBoundingClientRect();
@@ -88,14 +94,18 @@ function App() {
       displayErrorMessage(characterName);
     }
 
-    function findCharacter(characterLocation) {
-      const context = canvas.current.getContext("2d");
-      return context.isPointInPath(
-        characterLocation,
-        cursorPosition.current.x,
-        cursorPosition.current.y
-      );
+    if (charactersFound.current.size === NUM_OF_CHARACTERS) {
+      setGameStatus(GameStatus.FINISHED);
     }
+  }
+
+  function findCharacter(characterLocation) {
+    const context = canvas.current.getContext("2d");
+    return context.isPointInPath(
+      characterLocation,
+      cursorPosition.current.x,
+      cursorPosition.current.y
+    );
   }
 
   function displayErrorMessage(characterName) {
@@ -106,9 +116,9 @@ function App() {
         characterName={characterName}
       />
     );
-    setIsIncorrectChoice(true);
+    setShowErrorMessage(true);
     setTimeout(() => {
-      setIsIncorrectChoice(false);
+      setShowErrorMessage(false);
     }, 2000);
   }
 
@@ -124,9 +134,18 @@ function App() {
 
   return (
     <div id="App" className="App" onClick={toggleCharacterMenu}>
-      {menuIsOn && characterSelectionMenu.current}
-      {isIncorrectChoice && errorMessage.current}
-      <canvas ref={canvas} onClick={toggleCharacterMenu} />
+      <GameControl
+        status={gameStatus}
+        startGame={() => {
+          setGameStatus(GameStatus.ACTIVE);
+        }}
+        stopGame={() => {
+          setGameStatus(GameStatus.INACTIVE);
+        }}
+      />
+      {menuIsVisible && characterSelectionMenu.current}
+      {showErrorMessage && errorMessage.current}
+      <canvas ref={canvas} />
     </div>
   );
 }
