@@ -1,49 +1,50 @@
 import React, { useRef, useState } from "react";
-import Timer from "easytimer.js";
 import GameStatus from "../assets/GameStatus";
 
 function GameControl({ status, startGame, stopGame }) {
+  const URL_TIMER = "http://localhost:4000/timer";
   const [time, setTime] = useState();
-  const timer = useRef(new Timer());
-  const interval = useRef(null);
+  const eventSource = useRef(null);
 
-  function startTimer() {
-    timer.current.start();
+  function start() {
     startGame();
-    interval.current = setInterval(() => {
-      setTime(timer.current.getTimeValues().toString());
-    });
+    eventSource.current = new EventSource(URL_TIMER);
+    eventSource.current.onmessage = function (event) {
+      setTime(event.data);
+    };
   }
 
-  function stopTimer() {
-    timer.current.stop();
-    clearInterval(interval.current);
+  function stop() {
     stopGame();
+    eventSource.current.close();
   }
 
-  function finishTimer() {
-    timer.current.pause();
-    clearInterval(interval.current);
-
-    return timer.current.getTimeValues().toString();
+  function finish() {
+    return "TODO:";
   }
 
   function getControls() {
     if (status === GameStatus.INACTIVE) {
       return (
         <div>
-          <button onClick={startTimer}>Start</button>
+          <button onClick={start}>Start</button>
+          <p>00:00:00</p>
         </div>
       );
     } else if (status === GameStatus.ACTIVE) {
       return (
         <div>
-          <button onClick={stopTimer}>Stop</button>
+          <button onClick={stop}>Stop</button>
           <p>{time}</p>
         </div>
       );
     } else if (status === GameStatus.FINISHED) {
-      return <div>You finished the game in {finishTimer()}</div>;
+      return (
+        <div>
+          <button onClick={start}>Replay</button>
+          <div>You finished the game in {finish()}</div>
+        </div>
+      );
     }
   }
 
