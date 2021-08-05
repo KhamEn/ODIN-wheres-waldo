@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/ODIN-wheres-waldo/static/css/main.ae0f4d37.chunk.css",
+    "main.js": "/ODIN-wheres-waldo/static/js/main.b885e142.chunk.js",
+    "main.js.map": "/ODIN-wheres-waldo/static/js/main.b885e142.chunk.js.map",
+    "runtime-main.js": "/ODIN-wheres-waldo/static/js/runtime-main.42a9ce88.js",
+    "runtime-main.js.map": "/ODIN-wheres-waldo/static/js/runtime-main.42a9ce88.js.map",
+    "static/js/2.9370dcf5.chunk.js": "/ODIN-wheres-waldo/static/js/2.9370dcf5.chunk.js",
+    "static/js/2.9370dcf5.chunk.js.map": "/ODIN-wheres-waldo/static/js/2.9370dcf5.chunk.js.map",
+    "index.html": "/ODIN-wheres-waldo/index.html",
+    "static/css/main.ae0f4d37.chunk.css.map": "/ODIN-wheres-waldo/static/css/main.ae0f4d37.chunk.css.map",
+    "static/js/2.9370dcf5.chunk.js.LICENSE.txt": "/ODIN-wheres-waldo/static/js/2.9370dcf5.chunk.js.LICENSE.txt",
+    "static/media/me-characters.ebedfbb0.png": "/ODIN-wheres-waldo/static/media/me-characters.ebedfbb0.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.42a9ce88.js",
+    "static/js/2.9370dcf5.chunk.js",
+    "static/css/main.ae0f4d37.chunk.css",
+    "static/js/main.b885e142.chunk.js"
+  ]
+}
